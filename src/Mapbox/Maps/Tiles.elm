@@ -1,13 +1,12 @@
-module Mapbox.Maps.Tiles
-    exposing
-        ( Coordinates
-        , Format(..)
-        , ImageFormat(..)
-        , tiles
-        , GeoCoordinates
-        , Parameters
-        , features
-        )
+module Mapbox.Maps.Tiles exposing
+    ( Coordinates
+    , Format(..)
+    , ImageFormat(..)
+    , tiles
+    , GeoCoordinates
+    , Parameters
+    , features
+    )
 
 {-| Allows to access tiles API. The tiles are returned as image from Mapbox. As there is no notion of image into elm today, they only return the correct url to use it according to what you want to do.
 
@@ -28,11 +27,12 @@ module Mapbox.Maps.Tiles
 
 -}
 
+import Debug
+import GeoJson exposing (GeoJson)
+import Helpers
+import Http
 import Mapbox
 import Mapbox.Endpoint exposing (Endpoint, Maps)
-import Helpers
-import GeoJson exposing (GeoJson)
-import Http
 
 
 {-| Coordinates required by tiles API, in form of x, y and z.
@@ -68,7 +68,7 @@ type ImageFormat
 coordinatesToOptions : Coordinates -> String
 coordinatesToOptions { x, y, z } =
     [ z, x, y ]
-        |> List.map toString
+        |> List.map String.fromInt
         |> String.join "/"
         |> Helpers.addBeginningSlash
 
@@ -140,7 +140,7 @@ type alias Parameters =
 geoCoordinatesToUrl : GeoCoordinates -> String
 geoCoordinatesToUrl { longitude, latitude } =
     [ longitude, latitude ]
-        |> List.map toString
+        |> List.map String.fromFloat
         |> String.join ","
         |> Helpers.addBeginningSlash
 
@@ -161,7 +161,7 @@ parameterToList name =
 
 parameterTuple : String -> a -> ( String, String )
 parameterTuple name value =
-    ( name, toString value )
+    ( name, Debug.toString value )
 
 
 {-| Retrieve a FeatureCollection from tiles. It returns an `Http.Request GeoJson`, in the format you can have in [`mgold/elm-geojson`](https://github.com/mgold/elm-geojson).

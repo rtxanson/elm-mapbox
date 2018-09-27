@@ -6,10 +6,10 @@ module Mapbox.Maps.EditorProject exposing (editorProject)
 
 -}
 
-import Mapbox
-import Mapbox.Endpoint exposing (Endpoint, Maps)
 import GeoJson exposing (GeoJson)
 import Http
+import Mapbox
+import Mapbox.Endpoint exposing (Endpoint, Maps)
 
 
 {-| Creates an Http.Request GeoJson, retrieving informations from an editor project. The decoder is already here, and returns a GeoJson record, provided by [`mgold/elm-geojson`](https://github.com/mgold/elm-geojson).

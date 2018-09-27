@@ -1,10 +1,11 @@
-module Helpers exposing (addBeginningSlash, addBeginningAmpersand, retinaToUrl)
+module Helpers exposing (addBeginningAmpersand, addBeginningSlash, retinaToUrl)
 
 
 addBeginningString : String -> String -> String
 addBeginningString before string =
     if String.isEmpty string then
         ""
+
     else
         before ++ string
 
@@ -23,5 +24,6 @@ retinaToUrl : Bool -> String
 retinaToUrl retina =
     if retina then
         "@2x"
+
     else
         ""

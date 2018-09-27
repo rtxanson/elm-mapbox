@@ -1,24 +1,23 @@
-module Mapbox.Endpoint
-    exposing
-        ( Endpoint
-        , Maps
-        , toUrl
-        , maps
-        , streets
-        , light
-        , dark
-        , satellite
-        , streetsSatellite
-        , wheatpaste
-        , streetsBasic
-        , comic
-        , outdoors
-        , runBikeHike
-        , pencil
-        , pirates
-        , emerald
-        , highContrast
-        )
+module Mapbox.Endpoint exposing
+    ( Endpoint
+    , Maps
+    , toUrl
+    , streets
+    , light
+    , dark
+    , satellite
+    , streetsSatellite
+    , wheatpaste
+    , streetsBasic
+    , comic
+    , outdoors
+    , runBikeHike
+    , pencil
+    , pirates
+    , emerald
+    , highContrast
+    , toMaps
+    )
 
 {-| Endpoint module construct correct endpoints to Mapbox, and provide predefined endpoints as well as custom endpoints. It ensures that Maps endpoints are correctly reversed in the url generation. (As indicated in Mapbox API for v4 version of Maps.)
 
@@ -96,31 +95,33 @@ concatEndpoint api version =
 {-| Generate string from Endpoints in the correct order to use it into Mapbox urls. You generally don't need to use it, as Mapbox.url calls it.
 -}
 toUrl : Endpoint a -> String
-toUrl ((Endpoint { api, version }) as endpoint) =
+toUrl ((Endpoint { api, version }) as eendpoint) =
     let
         concat =
-            if isMapsApi endpoint then
-                flip concatEndpoint
+            if isMapsApi eendpoint then
+                \b a -> concatEndpoint a b
+
             else
                 concatEndpoint
     in
-        concat api version
+    concat api version
 
 
 mapsToUrl : Endpoint Maps -> String
-mapsToUrl ((Endpoint { api, version }) as endpoint) =
+mapsToUrl ((Endpoint { api, version }) as eendpoint) =
     if isV4Version version then
         concatEndpoint version api
+
     else
-        toUrl endpoint
+        toUrl eendpoint
 
 
 endpoint : Bool -> String -> String -> Endpoint a
-endpoint maps api version =
+endpoint mmaps api version =
     Endpoint
         { api = api
         , version = version
-        , maps = maps
+        , maps = mmaps
         }
 
 
@@ -136,14 +137,14 @@ endpoint maps api version =
 
 {-| Produce an `Endpoint Maps` endpoint, allowing to use custom username and id.
 -}
-maps : String -> String -> Endpoint Maps
-maps username id =
+toMaps : String -> String -> Endpoint Maps
+toMaps username id =
     endpoint True (username ++ "." ++ id) "v4"
 
 
 mapboxEndpoint : String -> Endpoint Maps
 mapboxEndpoint =
-    maps "mapbox"
+    toMaps "mapbox"
 
 
 {-| Provide "mapbox.streets" endpoint.
